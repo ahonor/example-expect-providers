@@ -1,0 +1,31 @@
+name: example-expect-node-executor
+rundeckPluginVersion: 1.2
+author: Alex Honor
+date: 09/11/2018
+version: 1.0.0
+providers:
+    - name: example-expect-node-executor
+      service: NodeExecutor
+      title: Example / Expect / Node Executor
+      description: 'Execute commands via expect'
+      plugin-type: script
+      script-interpreter: /usr/bin/env expect -f
+      script-file: expectw
+      script-args: ${node.username} ${node.hostname} ${exec.command}
+      config:
+        - name: ssh_key_storage_path
+          title: SSH Key
+          type: String
+          required: true
+          description: 'Path to the SSH Key to use within Key Storage.'
+          scope: Project
+          renderingOptions:
+            selectionAccessor: "STORAGE_PATH"
+            valueConversion: "STORAGE_PATH_AUTOMATIC_READ"
+            storage-path-root: "keys"
+            storage-file-meta-filter: "Rundeck-key-type=private"
+        - name: dry_run
+          title: 'Dry run?'
+          type: Boolean
+          required: false
+          description: 'Just echo what would be done'

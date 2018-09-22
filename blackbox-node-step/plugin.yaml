@@ -1,0 +1,48 @@
+name: example-expect-providers
+rundeckPluginVersion: 1.2
+author: Alex Honor
+date: 09/11/2018
+version: 1.0.0
+providers:
+    - name: example-blackbox-expect-node-step
+      service: WorkflowNodeStep
+      title: Example / Expect / Blackbox Script
+      description: Executes the blackbox expect script.
+      plugin-type: script
+      script-interpreter: /usr/bin/env expect -f
+      script-file: expectw
+      script-args: ${node.username} ${node.hostname}
+      config:
+        - name: key-storage-path
+          title: Keyfile
+          type: String
+          required: false
+          description: "Storage path to the key."
+          renderingOptions:
+            groupng: secondary
+            groupName: Credentials
+            selectionAccessor: "STORAGE_PATH"
+            valueConversion: "STORAGE_PATH_AUTOMATIC_READ"
+            storage-path-root: "keys"
+            instance-scope-node-attribute: "ssh-key-storage-path"
+        - name: boolean
+          title: a boolean
+          type: Boolean
+          required: false
+          default: true
+          description: "a boolean property example."
+        - name: select
+          title: a select
+          type: Select
+          values: "yes,no"
+          default: no
+        - name: freeselect
+          title: a free select
+          type: FreeSelect
+          required: false
+          values: "one,two,three"
+        - name: options
+          title: a free select
+          type: Options
+          required: false
+          values: "apple,pear,orange"

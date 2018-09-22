@@ -1,0 +1,41 @@
+name: example-expect-providers
+rundeckPluginVersion: 1.2
+author: Alex Honor
+date: 09/11/2018
+version: 1.0.0
+providers:
+    - name: example-expect-node-step
+      service: WorkflowNodeStep
+      title: Example / Expect / Inline Script
+      description: Executes the inline expect script.
+      plugin-type: script
+      script-interpreter: /usr/bin/env expect -f
+      script-file: expectw
+      script-args: ${node.username} ${node.hostname}
+      config:
+        - name: expect_script
+          title: Expect script
+          type: String
+          required: true
+          description: The expect script to execute. Script can reference context variables.
+          renderingOptions:
+            displayType: CODE
+            codeSyntaxMode: TCL
+        - name: key-storage-path
+          title: Keyfile
+          type: String
+          required: false
+          description: "Storage path to the key."
+          renderingOptions:
+            groupng: secondary
+            groupName: Credentials
+            selectionAccessor: "STORAGE_PATH"
+            valueConversion: "STORAGE_PATH_AUTOMATIC_READ"
+            storage-path-root: "keys"
+            instance-scope-node-attribute: "ssh-key-storage-path"
+        - name: dry-run
+          title: Dry run
+          type: Boolean
+          required: false
+          default: true
+          description: "Show commands to run without executing."

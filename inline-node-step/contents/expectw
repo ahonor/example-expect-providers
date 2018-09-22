@@ -1,0 +1,15 @@
+#!/usr/bin/expect -f
+
+# get command-line args
+set username [lindex $argv 0]
+set hostname [lindex $argv 1]
+
+puts "DEBUG: username@hostname: [format {%s@%s} $username $hostname]"
+
+ if { [info exists ::env(RD_CONFIG_EXPECT_SCRIPT) ] } {
+        puts "DEBUG: expect script"
+        puts "DEBUG: ```"
+        puts "$::env(RD_CONFIG_EXPECT_SCRIPT)"
+        puts "DEBUG: ```"
+ }
+

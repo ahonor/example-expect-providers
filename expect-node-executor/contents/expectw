@@ -1,0 +1,11 @@
+#!/usr/bin/expect -f
+
+# get command-line args
+set username [lindex $argv 0]
+set hostname [lindex $argv 1]
+set command  [lindex $argv 2]
+
+puts "DEBUG: username@hostname: [format {%s@%s} $username $hostname]"
+puts "DEBUG: command to execute: $command"
+#lsort [array get ::env]
+parray ::env
