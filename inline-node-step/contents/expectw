@@ -1,15 +1,52 @@
 #!/usr/bin/expect -f
 
-# get command-line args
+#
+# Process command line args and config inputs.
+#
 set username [lindex $argv 0]
 set hostname [lindex $argv 1]
+set prompt [lindex $argv 2]
 
-puts "DEBUG: username@hostname: [format {%s@%s} $username $hostname]"
+# Ensure key value was defined.
+if { ! [info exists ::env(RD_CONFIG_KEY_STORAGE_PATH) ] } {
+    puts "ERROR: key-storage-path was not set"
+    exit 2
+}
+set password "$::env(RD_CONFIG_KEY_STORAGE_PATH)"
 
- if { [info exists ::env(RD_CONFIG_EXPECT_SCRIPT) ] } {
-        puts "DEBUG: expect script"
-        puts "DEBUG: ```"
-        puts "$::env(RD_CONFIG_EXPECT_SCRIPT)"
-        puts "DEBUG: ```"
- }
+if { ! [info exists ::env(RD_CONFIG_EXPECT_SCRIPT) ] } {
+     puts "ERROR: expect script not provided"
+     exit 2
+}
+
+#
+# If dryrun mode is set to true, print script and exit.
+#
+if { [info exists ::env(RD_CONFIG_DRYUN)] && \
+		[string equal -nocase $::env(RD_CONFIG_DRYUN) true] } {
+	puts "dry-run: expect script"
+	puts "dry-run: ```"
+	puts "$::env(RD_CONFIG_EXPECT_SCRIPT)"
+	puts "dry-run: ```"
+	exit 0
+}
+
+#
+# Open SSH session with specified credentials and send the inline script.
+#
+puts "DEBUG: using credentials: [format {%s@%s} $username $hostname]"
+spawn ssh -tt -oTCPKeepAlive=yes -o ServerAliveInterval=40 -oStrictHostKeyChecking=no $username@$hostname
+expect "password: "
+send "$password\r"
+expect -re $prompt
+
+# Send the inline script.
+send "$::env(RD_CONFIG_EXPECT_SCRIPT)\r"
+
+#
+# Finish up and close the session.
+#
+send "exit\r"
+close
+# Done.
 

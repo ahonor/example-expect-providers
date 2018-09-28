@@ -11,7 +11,7 @@ providers:
       plugin-type: script
       script-interpreter: /usr/bin/env expect -f
       script-file: expectw
-      script-args: ${node.username} ${node.hostname}
+      script-args: ${node.username} ${node.hostname} ${config.prompt}
       config:
         - name: expect_script
           title: Expect script
@@ -24,7 +24,7 @@ providers:
         - name: key-storage-path
           title: Keyfile
           type: String
-          required: false
+          required: true
           description: "Storage path to the key."
           renderingOptions:
             groupng: secondary
@@ -39,3 +39,9 @@ providers:
           required: false
           default: true
           description: "Show commands to run without executing."
+        - name: prompt
+          title: Prompt
+          type: String
+          required: true
+          default: "Password:"
+          description: "The login prompt to expect."
